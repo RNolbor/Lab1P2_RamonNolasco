@@ -30,7 +30,7 @@ public class Lab1P2_RamonNolasco {
             System.out.println("Elige una opcion: ");
             
             opcion = input.nextInt();
-            while (opcion < 1 || opcion < 3) {
+            while (opcion < 1 || opcion > 3) {
                 System.out.println("Ingrese opcion valida!: ");
                     opcion = input.nextInt();
             }
@@ -76,13 +76,74 @@ public class Lab1P2_RamonNolasco {
         }
         Random rand = new Random();
         int[] secreto = new int[longitud];
-        for (int i = 0; i < longitud; i++) {
-            secreto[i] = rand.nextInt(maxDigito) + 1;
+        for ( int i = 0; i < longitud; i++) {
+            secreto[i] = rand.nextInt(maxDigito)+1;
         }
         input.nextLine();
         ArrayList<String> historial = new ArrayList<>();
         
-    }    
+        while ( intentos > 0) {
+            System.out.print("Ingresa tu intento (" + longitud + " digitos): ");
+            String intentoStr =    input.nextLine();
+
+            if ( intentoStr.length() != longitud ) {
+                System.out.println("Longitud incorrecta.");
+                continue;
+            }
+
+            int[] intento = new int[longitud];
+            boolean valido = true;
+            for (int i = 0; i < longitud; i++) {
+                int dig = intentoStr.charAt(i)-'0';
+                if ( dig < 1 || dig > maxDigito ) {
+                    valido = false;
+                    break;
+                }
+                intento[i] = dig;
+            }
+
+            if (!valido) {
+                System.out.println("Digitos fuera de rango.");
+                continue;
+            }
+
+            String feedback = "";
+            
+            for (int i = 0; i < longitud; i++) {
+                if (intento[i] == secreto[i]) {
+                    feedback += "+";
+                } else if (contiene(secreto, intento[i])) {
+                    feedback += "-";
+                } else {
+                    feedback += "x";
+                }
+            }
+
+            historial.add(intentoStr + " → " + feedback);
+            if (feedback.equals("+".repeat ( longitud ))) {
+                System.out.println("Ha acertado");
+                break;
+            }
+
+            intentos--;
+            System.out.println("Retroalimentacion: " + feedback);
+        }
+
+        System.out.println("Historial de intentos: ");
+        for ( String h : historial) {
+            System.out.println(h);
+        }
+    }
+
+    public static boolean contiene ( int[] arr, int valor) {
+        for ( int n : arr ) {
+            if (n == valor) {
+                return true;
+            }
+        }
+        return false;
+    }
+     
         
         
     // METDOS EJERCICIO 2
